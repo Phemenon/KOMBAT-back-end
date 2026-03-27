@@ -1,0 +1,83 @@
+# Industrial Overlord v3: Universal Scaling
+T = T + 1
+op = opponent
+
+# 1. เช็คสถานะการบุกแบบ Dynamic (Relative to MaxBudget)
+shouldAttack = 0
+# บุกเมื่อเงินเกิน 90% ของเพดาน (ป้องกันเงินล้น และเริ่มกดดันศัตรู)
+if (Budget - (MaxBudget * 9 / 10)) then { shouldAttack = 1 } else { shouldAttack = 0 }
+# บุกเมื่อผ่านไปแล้ว 70% ของเวลาทั้งหมด (MaxTurns)
+if (T - (MaxTurns * 7 / 10)) then { shouldAttack = 1 } else {}
+
+# 2. Logic เปิดทางให้เพื่อน (ใช้ t ตัวเล็ก เพื่อเช็คอายุรายตัว)
+if (8 - t) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+} else {}
+t = t + 1
+
+if (op) then {
+  dist = op / 10
+  dir = op % 10
+
+  if (dist - 1) then {
+    # ===== ระยะไกล =====
+    if (shouldAttack) then {
+        # โหมดไล่ล่า (Hunt Mode)
+        if (dir - 1) then {
+          if (dir - 2) then {
+            if (dir - 3) then {
+              if (dir - 4) then {
+                if (dir - 5) then { move upleft } else { move downleft }
+              } else { move down }
+            } else { move downright }
+          } else { move upright }
+        } else { move up }
+    } else {
+        # โหมดสะสมดอกเบี้ย (Compound Interest)
+        done
+    }
+  } else {
+    # ===== ระยะประชิด (Adaptive Defense) =====
+    # ยิงแรงสุด (250) ถ้าเงินเกินครึ่ง ถ้าเงินน้อยยิงประหยัด
+    power = 250
+    if (Budget - (MaxBudget / 2)) then {} else {
+        if (Budget - 200) then { power = 100 } else { power = 50 }
+    }
+
+    if (dir - 1) then {
+      if (dir - 2) then {
+        if (dir - 3) then {
+          if (dir - 4) then {
+            if (dir - 5) then { shoot upleft power } else { shoot downleft power }
+          } else { shoot down power }
+        } else { shoot downright power }
+      } else { shoot upright power }
+    } else { shoot up power }
+  }
+} else {
+  # ===== ไม่เห็นศัตรู =====
+  if (shouldAttack) then {
+    # เดินสำรวจแบบสุ่ม (Scouting)
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+  } else {
+    done
+  }
+}

@@ -1,0 +1,82 @@
+# Bomber v2: Tactical Strike (Financial-Aware Aggression)
+T = T + 1
+op = opponent
+
+# 1. เช็คความพร้อม (Strike Threshold)
+# ถ้าเงินยังน้อยกว่า 3000 ให้นิ่งเพื่อกินดอกเบี้ยก่อน (ยกเว้นเจอศัตรูประชิด)
+isReady = 0
+if (Budget - 3000) then { isReady = 1 } else { isReady = 0 }
+
+# 2. เปิดทางให้เพื่อน (Spawn Area Clearing)
+# ใช้ t (Local) ของตัวเอง เช็คว่าถ้าเพิ่งเกิด (ไม่เกิน 10 เทิร์นแรก) ให้เดินออกมาทันที
+if (10 - t) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+} else {}
+t = t + 1
+
+if (op) then {
+  dist = op / 10
+  dir = op % 10
+
+  if (dist - 1) then {
+    # ===== ระยะไกล =====
+    if (isReady) then {
+        # โหมดบุก: พุ่งเข้าหาเป้าหมาย
+        if (dir - 1) then {
+          if (dir - 2) then {
+            if (dir - 3) then {
+              if (dir - 4) then {
+                if (dir - 5) then { move upleft } else { move downleft }
+              } else { move down }
+            } else { move downright }
+          } else { move upright }
+        } else { move up }
+    } else {
+        # ช่วงเก็บเงิน: อยู่นิ่งๆ รอดอกเบี้ย
+        done
+    }
+  } else {
+    # ===== ระยะประชิด (Full Payload) =====
+    # ยิง 250 เพื่อ One-shot kill ตาม Config HP 250
+    power = 250
+    if (Budget - 1000) then {} else {
+        if (Budget - 300) then { power = 100 } else { power = 50 }
+    }
+
+    if (dir - 1) then {
+      if (dir - 2) then {
+        if (dir - 3) then {
+          if (dir - 4) then {
+            if (dir - 5) then { shoot upleft power } else { shoot downleft power }
+          } else { shoot down power }
+        } else { shoot downright power }
+      } else { shoot upright power }
+    } else { shoot up power }
+  }
+} else {
+  # ===== ไม่เห็นศัตรู =====
+  if (isReady) then {
+    # เดินลาดตระเวนหาเหยื่อแบบสุ่ม
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+  } else {
+    done
+  }
+}

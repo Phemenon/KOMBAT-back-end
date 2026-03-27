@@ -1,0 +1,85 @@
+# Berserker v8: Adaptive Juggernaut
+T = T + 1
+op = opponent
+
+# 1. เช็คความพร้อม (Berserk Threshold) - Dynamic Scaling
+isReady = 0
+# บุกเมื่อเงินเกิน 40% ของเพดานสูงสุด
+if (Budget - (MaxBudget * 4 / 10)) then { isReady = 1 } else { isReady = 0 }
+# หรือบุกทันทีเมื่อผ่านไปครึ่งเกมแล้ว (ป้องกันเกมจบก่อนบุก)
+if (T - (MaxTurns / 2)) then { isReady = 1 } else {}
+
+# 2. Logic เปิดทางให้เพื่อน (Spawn Area Clearing)
+if (8 - t) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+} else {}
+t = t + 1
+
+if (op) then {
+  dist = op / 10
+  dir = op % 10
+
+  if (dist - 1) then {
+    # ===== ระยะไกล (Hunt Mode) =====
+    if (isReady) then {
+        # พุ่งเข้าหาศัตรูทันทีด้วยสัญชาตญาณ Berserker
+        if (dir - 1) then {
+          if (dir - 2) then {
+            if (dir - 3) then {
+              if (dir - 4) then {
+                if (dir - 5) then { move upleft } else { move downleft }
+              } else { move down }
+            } else { move downright }
+          } else { move upright }
+        } else { move up }
+    } else {
+        # ช่วงเก็บเงิน: ยืนรอให้ศัตรูเข้ามาหาเอง (Counter-Attack)
+        done
+    }
+  } else {
+    # ===== ระยะประชิด (Execute Mode) =====
+    # คำนวณพลังยิงตามความเหมาะสมของงบประมาณ
+    power = 250
+    # ถ้าเงินเหลือน้อยกว่า 15% ของ MaxBudget ให้ลดพลังยิงเพื่อรักษาตัว
+    if (Budget - (MaxBudget * 15 / 100)) then { power = 250 } else {
+        if (Budget - 150) then { power = 100 } else { power = 40 }
+    }
+
+    if (dir - 1) then {
+      if (dir - 2) then {
+        if (dir - 3) then {
+          if (dir - 4) then {
+            if (dir - 5) then { shoot upleft power } else { shoot downleft power }
+          } else { shoot down power }
+        } else { shoot downright power }
+      } else { shoot upright power }
+    } else { shoot up power }
+  }
+} else {
+  # ===== ไม่เห็นศัตรู (Aggressive Scouting) =====
+  if (isReady) then {
+    # เดินหาเป้าหมายทั่วสนาม
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+  } else {
+    # ช่วงเก็บเงิน: อยู่นิ่งๆ รอดอกเบี้ยทำงาน
+    done
+  }
+}

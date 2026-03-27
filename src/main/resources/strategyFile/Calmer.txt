@@ -1,0 +1,86 @@
+# Calmer v4: Adaptive Stalker
+T = T + 1
+op = opponent
+
+# 1. เช็คสถานะการเงินแบบ Dynamic (Relative to MaxBudget)
+# ถ้าเงินยังน้อยกว่า 60% ของ MaxBudget ให้เข้าโหมดประหยัด (Saving Mode)
+isSaving = 0
+if ((MaxBudget * 6 / 10) - Budget) then { isSaving = 1 } else { isSaving = 0 }
+
+# 2. Logic เปิดทางให้เพื่อน (Spawn Area Clearing)
+# ยูนิตเกิดใหม่ทุกตัวต้องเดินออกจากมุม 8 ก้าวแรก
+if (8 - t) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+} else {}
+t = t + 1
+
+if (op) then {
+  dist = op / 10
+  dir = op % 10
+
+  if (dist - 1) then {
+    # ===== ระยะไกล (Target is far) =====
+    if (isSaving) then {
+        # ช่วงสะสมเงิน: นิ่งไว้รับดอกเบี้ย ไม่วิ่งไล่ให้เปลืองค่า move
+        done
+    } else {
+        # ช่วงเงินพร้อม: เริ่มการสะกดรอยตาม (Stalking)
+        if (dir - 1) then {
+          if (dir - 2) then {
+            if (dir - 3) then {
+              if (dir - 4) then {
+                if (dir - 5) then { move upleft } else { move downleft }
+              } else { move down }
+            } else { move downright }
+          } else { move upright }
+        } else { move up }
+    }
+  } else {
+    # ===== ระยะประชิด (Self-Defense / Execute) =====
+    # คำนวณพลังยิงตาม Budget ที่มีจริง
+    # ถ้ามีเงินมากกว่า 1 ใน 4 ของเพดาน ให้ยิงแรง (130-250)
+    power = 65
+    if (Budget - (MaxBudget / 4)) then {
+        if (Budget - (MaxBudget / 2)) then { power = 250 } else { power = 130 }
+    } else {
+        # ถ้าจน ให้ยิงแค่พอขู่หรือตอด (65)
+        power = 65
+    }
+
+    if (dir - 1) then {
+      if (dir - 2) then {
+        if (dir - 3) then {
+          if (dir - 4) then {
+            if (dir - 5) then { shoot upleft power } else { shoot downleft power }
+          } else { shoot down power }
+        } else { shoot downright power }
+      } else { shoot upright power }
+    } else { shoot up power }
+  }
+} else {
+  # ===== ไม่เห็นศัตรู (Scouting) =====
+  if (isSaving) then {
+    done
+  } else {
+    # ลาดตระเวนหาเหยื่อแบบสุ่มทิศทาง
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+  }
+}

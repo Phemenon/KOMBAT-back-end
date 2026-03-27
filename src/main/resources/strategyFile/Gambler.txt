@@ -1,0 +1,87 @@
+# Gambler v3: Universal High Roller
+T = T + 1
+op = opponent
+
+# 1. เช็คสถานะการเงิน (Dynamic Edge)
+isGambling = 0
+# เริ่มบุกเมื่อเงินเกินครึ่งหนึ่งของเพดานสูงสุด
+if (Budget - (MaxBudget / 2)) then { isGambling = 1 } else { isGambling = 0 }
+
+# 2. Logic เปิดทางให้เพื่อน (Spawn Area Clearing)
+if (8 - t) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+} else {}
+t = t + 1
+
+if (op) then {
+  dist = op / 10
+  dir = op % 10
+
+  if (dist - 1) then {
+    # ===== ระยะไกล (Seeking Action) =====
+    if (isGambling) then {
+        if (dir - 1) then {
+          if (dir - 2) then {
+            if (dir - 3) then {
+              if (dir - 4) then {
+                if (dir - 5) then { move upleft } else { move downleft }
+              } else { move down }
+            } else { move downright }
+          } else { move upright }
+        } else { move up }
+    } else {
+        done
+    }
+  } else {
+    # ===== ระยะประชิด (High Stakes Shot) =====
+    roll = random % 10
+
+    # สัดส่วนพลังยิงตามความรวยเทียบกับ MaxBudget
+    if (Budget - (MaxBudget * 6 / 10)) then {
+      # รวยมาก: สุ่ม 150 หรือ 250 (ความเสี่ยงต่ำ กำไรสูง)
+      if (roll - 5) then { power = 150 } else { power = 250 }
+    } else {
+      if (Budget - (MaxBudget * 2 / 10)) then {
+        # พอมีเงิน: สุ่ม 60 หรือ 130
+        if (roll - 6) then { power = 60 } else { power = 130 }
+      } else {
+        # ใกล้ล้มละลาย: สุ่ม 30 หรือ 80
+        if (roll - 7) then { power = 30 } else { power = 80 }
+      }
+    }
+
+    if (dir - 1) then {
+      if (dir - 2) then {
+        if (dir - 3) then {
+          if (dir - 4) then {
+            if (dir - 5) then { shoot upleft power } else { shoot downleft power }
+          } else { shoot down power }
+        } else { shoot downright power }
+      } else { shoot upright power }
+    } else { shoot up power }
+  }
+} else {
+  if (isGambling) then {
+    r = random % 6 + 1
+    if (r - 1) then {
+      if (r - 2) then {
+        if (r - 3) then {
+          if (r - 4) then {
+            if (r - 5) then { move upleft } else { move downleft }
+          } else { move down }
+        } else { move downright }
+      } else { move upright }
+    } else { move up }
+  } else {
+    done
+  }
+}
