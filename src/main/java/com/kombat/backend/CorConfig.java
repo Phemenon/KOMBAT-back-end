@@ -9,9 +9,9 @@ public class CorConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(
+                .allowedOriginPatterns(
                         "http://localhost:5173",
-                        "https://kombat-front-end-6q73.vercel.app"
+                        "https://*.vercel.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
